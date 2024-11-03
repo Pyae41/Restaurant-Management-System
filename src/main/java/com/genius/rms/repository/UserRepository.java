@@ -1,6 +1,6 @@
 package com.genius.rms.repository;
 
-import com.genius.rms.model.Role;
+import com.genius.rms.utils.Role;
 import com.genius.rms.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

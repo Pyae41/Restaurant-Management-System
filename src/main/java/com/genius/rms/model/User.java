@@ -1,6 +1,7 @@
 package com.genius.rms.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.genius.rms.utils.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -34,6 +35,9 @@ public class User implements UserDetails {
     private String password;
 
     private Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Order> orders;
 
     @CreationTimestamp
     @Column(updatable = false, name="created_at")
