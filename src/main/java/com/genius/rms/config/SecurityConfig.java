@@ -28,9 +28,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity https) throws Exception{
+
+
         https.csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers
+                        .frameOptions(frameOptions -> frameOptions.sameOrigin()))// disable frame option for h2 console
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/api/v1/admin").hasAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/v1/user").hasAuthority(Role.USER.name())
                         .anyRequest().authenticated())

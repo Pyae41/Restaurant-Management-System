@@ -1,5 +1,6 @@
 package com.genius.rms.service.impl;
 
+import com.genius.rms.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -14,7 +15,7 @@ import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
-public class JwtServiceImpl {
+public class JwtServiceImpl implements JwtService {
 
     private final Key SECRET_KEY = getSigning();
 
@@ -39,7 +40,9 @@ public class JwtServiceImpl {
                 .parseClaimsJws(token)
                 .getBody();
     }
-    private String extractUsername(String token){
+
+    @Override
+    public String extractUsername(String token){
         return extractClaims(token, Claims::getSubject);
     }
 
