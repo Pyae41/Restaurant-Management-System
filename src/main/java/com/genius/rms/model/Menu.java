@@ -15,9 +15,9 @@ public class Menu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @Column(nullable = false)
-    private String menu;
+//
+//    @Column(nullable = false)
+//    private String menu;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
