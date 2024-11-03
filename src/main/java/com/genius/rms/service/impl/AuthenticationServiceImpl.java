@@ -3,7 +3,7 @@ package com.genius.rms.service.impl;
 import com.genius.rms.dto.JwtResponseDto;
 import com.genius.rms.dto.LoginDto;
 import com.genius.rms.dto.RegisterDto;
-import com.genius.rms.model.Role;
+import com.genius.rms.utils.Role;
 import com.genius.rms.model.User;
 import com.genius.rms.repository.UserRepository;
 import com.genius.rms.service.AuthenticationService;
@@ -51,6 +51,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         JwtResponseDto jwtResponse = new JwtResponseDto();
         jwtResponse.setToken(jwtToken);
+        jwtResponse.setUser(user);
 
         return jwtResponse;
     }

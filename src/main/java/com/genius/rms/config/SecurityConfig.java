@@ -1,6 +1,6 @@
 package com.genius.rms.config;
 
-import com.genius.rms.model.Role;
+import com.genius.rms.utils.Role;
 import com.genius.rms.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

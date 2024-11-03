@@ -1,4 +1,4 @@
-package com.genius.rms.model;
+package com.genius.rms.utils;
 
 public enum Role {
     ADMIN,
