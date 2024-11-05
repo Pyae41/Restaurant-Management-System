@@ -1,15 +1,12 @@
 package com.genius.rms.controller;
 
 import com.genius.rms.dto.JwtResponseDto;
-import com.genius.rms.dto.LoginDto;
+import com.genius.rms.dto.LoginRequestDto;
 import com.genius.rms.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,8 +17,10 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponseDto> login(@RequestBody LoginDto loginDto){
+    public ResponseEntity<JwtResponseDto> login(
+            @RequestParam(defaultValue = "en") String lang,
+            @RequestBody LoginRequestDto loginRequestDto){
         log.info("Success login");
-        return ResponseEntity.ok(authenticationService.login(loginDto));
+        return ResponseEntity.ok(authenticationService.login(lang, loginRequestDto));
     }
 }

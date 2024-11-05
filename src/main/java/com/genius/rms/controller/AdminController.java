@@ -1,7 +1,8 @@
 package com.genius.rms.controller;
 
-import com.genius.rms.dto.RegisterDto;
+import com.genius.rms.dto.RegisterRequestDto;
 import com.genius.rms.model.User;
+import com.genius.rms.repository.LanguageRepository;
 import com.genius.rms.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,12 +20,20 @@ public class AdminController {
 
     private final AuthenticationService authenticationService;
     private final MessageSource messageSource;
+    private final LanguageRepository languageRepository;
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterDto registerDto){
-        log.info("Success adding user");
-        return ResponseEntity.ok(authenticationService.register(registerDto));
+    public ResponseEntity<User> register(@RequestBody RegisterRequestDto registerDto){
+       try{
+           log.info("Success register user");
+           return ResponseEntity.ok(authenticationService.register(registerDto));
+       }
+       catch(Exception e){
+           log.error("Fail to register user");
+           throw new RuntimeException("Error: {}" + e.getMessage());
+       }
     }
+
 
     @GetMapping("/greeting")
     public ResponseEntity<String> greeting(@RequestParam(name = "lang") String lang){
