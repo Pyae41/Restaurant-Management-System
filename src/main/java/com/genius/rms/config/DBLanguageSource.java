@@ -33,6 +33,7 @@ public class DBLanguageSource extends AbstractMessageSource {
 
     @Override
     protected MessageFormat resolveCode(String code, Locale locale) {
+        loadLanguages();
         Map<String, String> langForLocale = languageCache.get(locale.getLanguage());
         if(!langForLocale.isEmpty() && langForLocale.containsKey(code)){
             return new MessageFormat(langForLocale.get(code), locale);
