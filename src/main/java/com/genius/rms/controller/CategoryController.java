@@ -1,6 +1,7 @@
 package com.genius.rms.controller;
 
 import com.genius.rms.dto.CategoryRequestDto;
+import com.genius.rms.dto.CategoryResponseDto;
 import com.genius.rms.model.Category;
 import com.genius.rms.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class CategoryController {
      * @return Category List
      */
     @GetMapping
-    public ResponseEntity<Page<Category>> getCategories(
+    public ResponseEntity<Page<CategoryResponseDto>> getCategories(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer limit,
             @RequestParam(defaultValue = "id") String sort,
@@ -48,7 +49,7 @@ public class CategoryController {
      * @param id
      * @return Category Object
      */
-    @PostMapping("/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Category> getCategory(@PathVariable Long id){
         try{
             log.info("Success fetching category");

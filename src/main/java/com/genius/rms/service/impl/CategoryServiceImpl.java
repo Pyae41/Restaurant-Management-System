@@ -1,6 +1,7 @@
 package com.genius.rms.service.impl;
 
 import com.genius.rms.dto.CategoryRequestDto;
+import com.genius.rms.dto.CategoryResponseDto;
 import com.genius.rms.exceptions.ResourceNotFoundException;
 import com.genius.rms.model.Category;
 import com.genius.rms.model.Language;
@@ -31,19 +32,16 @@ public class CategoryServiceImpl implements CategoryService {
     private final EntityManager entityManager;
 
     @Override
-    public Page<Category> getCategories(Integer page, Integer limit, String sortBy, String lang){
+    public Page<CategoryResponseDto> getCategories(Integer page, Integer limit, String sortBy, String lang){
         Locale locale = (lang != null) ? new Locale(lang) : Locale.getDefault();
         Pageable pageable = PageRequest.of(page, limit, Sort.by(sortBy));
 
         Page<Category> categories = categoryRepository.findAll(pageable);
 
-        categories.map(category -> {
+        return categories.map(category -> {
             String localization =  messageSource.getMessage("category."+category.getId(), null, locale);
-            category.setCategory(localization);
-            return category;
+            return new CategoryResponseDto(category.getId(), localization, category.getCreatedAt(),category.getUpdatedAt());
         });
-
-        return categories;
     }
 
     @Override
@@ -57,7 +55,6 @@ public class CategoryServiceImpl implements CategoryService {
     public Category addCategory(CategoryRequestDto categoryRequestDto) {
 
         Category newCategory = new Category();
-        newCategory.setCategory(categoryRequestDto.getCategory());
         categoryRepository.save(newCategory);
 
         // adding language
@@ -85,12 +82,19 @@ public class CategoryServiceImpl implements CategoryService {
         languages.forEach(language -> {
             String locale = language.split("-")[0];
             Optional<Language> lang = languageRepository.findByLangKeyAndLocale(langKey, locale);
-            System.out.println("update lang{}" + lang   );
 
             if(lang.isPresent()){
                 Language updateLang = lang.get();
                 updateLang.setLangValue(language.split("-")[1]);
                 languageRepository.save(updateLang);
+            }
+            // add if not exist
+            else{
+                Language newLang = new Language();
+                newLang.setLocale(language.split("-")[0]);
+                newLang.setLangKey("category." + updateCategory.getId());
+                newLang.setLangValue(language.split("-")[1]);
+                languageRepository.save(newLang);
             }
         });
 

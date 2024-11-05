@@ -6,6 +6,5 @@ import java.util.List;
 
 @Data
 public class CategoryRequestDto {
-    private String category;
     private List<String> languages;
 }

@@ -1,4 +1,4 @@
-package com.genius.rms.repository;
+package com.genius.rms.dto;
 
 import lombok.Data;
 

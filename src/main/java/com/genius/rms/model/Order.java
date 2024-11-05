@@ -18,7 +18,7 @@ public class Order {
     private long id;
 
     @Column(name = "order_number")
-    private Order orderNumber;
+    private String orderNumber;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
