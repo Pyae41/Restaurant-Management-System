@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/v1/admin/menu")
+@RequestMapping("/api/v1/menu")
 public class MenuController {
 
     private final MenuService menuService;
@@ -35,14 +35,10 @@ public class MenuController {
             @RequestParam(defaultValue = "en") String lang,
             @RequestParam(defaultValue = "0") Long categoryId
     ){
-        try{
+            log.info("Fetching menus");
+            Page<MenuResponseDto> menus = menuService.getMenus(page,limit,sort,lang, categoryId);
             log.info("Success fetching menus");
-            return ResponseEntity.ok(menuService.getMenus(page,limit,sort,lang, categoryId));
-        }
-        catch(Exception e){
-            log.info("Fail to fetch menus");
-            throw new RuntimeException("Error: {}" + e.getMessage());
-        }
+            return ResponseEntity.ok(menus);
     }
 
     /**
@@ -53,14 +49,10 @@ public class MenuController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Menu> getCategory(@PathVariable Long id){
-        try{
-            log.info("Success fetching menu");
-            return ResponseEntity.ok(menuService.findById(id));
-        }
-        catch(Exception e){
-            log.error("Fail to fetch menu");
-            throw new RuntimeException("Error: {}" + e.getMessage());
-        }
+            log.info("Fetching menu with id");
+            Menu menu = menuService.findById(id);
+            log.info("Success fetching menu with id");
+            return ResponseEntity.ok(menu);
     }
 
     /**
@@ -71,14 +63,10 @@ public class MenuController {
      */
     @PostMapping("/add")
     public ResponseEntity<Menu> addCategory(@RequestBody MenuRequestDto menuRequestDto){
-        try{
+            log.info("Adding menu");
+            Menu menu = menuService.addMenu(menuRequestDto);
             log.info("Success adding menu");
-            return ResponseEntity.ok(menuService.addMenu(menuRequestDto));
-        }
-        catch(Exception e){
-            log.error("Fail to add menu");
-            throw new RuntimeException("Error: {}" + e.getMessage());
-        }
+            return ResponseEntity.ok(menu);
     }
 
     /**
@@ -90,14 +78,10 @@ public class MenuController {
      */
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateCategory(@PathVariable Long id, @RequestBody MenuRequestDto menuRequestDto){
-        try{
+            log.info("Updating menu");
+            String response = menuService.updateMenu(id, menuRequestDto);
             log.info("Success updating menu");
-            return ResponseEntity.ok(menuService.updateMenu(id, menuRequestDto));
-        }
-        catch(Exception e){
-            log.error("Fail to update menu");
-            throw new RuntimeException("Error: {}" + e.getMessage());
-        }
+            return ResponseEntity.ok(response);
     }
 
     /**
@@ -108,12 +92,9 @@ public class MenuController {
      */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
-        try {
+            log.info("Deleting menu");
+            String response = menuService.deleteMenu(id);
             log.info("Success deleting menu");
-            return ResponseEntity.ok(menuService.deleteMenu(id));
-        } catch (Exception e) {
-            log.error("Fail to delete menu");
-            throw new RuntimeException("Error: {}" + e.getMessage());
-        }
+            return ResponseEntity.ok(response);
     }
 }

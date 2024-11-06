@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/admin/category")
+@RequestMapping("/api/v1/category")
 @Slf4j
 public class CategoryController {
 
@@ -33,14 +33,10 @@ public class CategoryController {
             @RequestParam(defaultValue = "id") String sort,
             @RequestParam(defaultValue = "en") String lang
     ){
-        try{
+            log.info("Fetching categories");
+            Page<CategoryResponseDto> categories = categoryService.getCategories(page,limit,sort,lang);
             log.info("Success fetching categories");
-            return ResponseEntity.ok(categoryService.getCategories(page,limit,sort,lang));
-        }
-        catch(Exception e){
-            log.info("Fail to fetch categories");
-            throw new RuntimeException("Error: {}" + e.getMessage());
-        }
+            return ResponseEntity.ok(categories);
     }
 
     /**
@@ -51,14 +47,10 @@ public class CategoryController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Category> getCategory(@PathVariable Long id){
-        try{
-            log.info("Success fetching category");
-            return ResponseEntity.ok(categoryService.getCategory(id));
-        }
-        catch(Exception e){
-            log.error("Fail to fetch category");
-            throw new RuntimeException("Error: {}" + e.getMessage());
-        }
+            log.info("Fetching category with id");
+            Category category = categoryService.getCategory(id);
+            log.info("Success fetching category with id");
+            return ResponseEntity.ok(category);
     }
 
     /**
@@ -69,14 +61,10 @@ public class CategoryController {
      */
     @PostMapping("/add")
     public ResponseEntity<Category> addCategory(@RequestBody CategoryRequestDto categoryRequestDto){
-        try{
+            log.info("Adding category");
+            Category category = categoryService.addCategory(categoryRequestDto);
             log.info("Success adding category");
-            return ResponseEntity.ok(categoryService.addCategory(categoryRequestDto));
-        }
-        catch(Exception e){
-            log.error("Fail to add category");
-            throw new RuntimeException("Error: {}" + e.getMessage());
-        }
+            return ResponseEntity.ok(category);
     }
 
     /**
@@ -88,14 +76,10 @@ public class CategoryController {
      */
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateCategory(@PathVariable Long id, @RequestBody CategoryRequestDto categoryRequestDto){
-        try{
+            log.info("Updating category");
+            String response = categoryService.updateCategory(id, categoryRequestDto);
             log.info("Success updating category");
-            return ResponseEntity.ok(categoryService.updateCategory(id, categoryRequestDto));
-        }
-        catch(Exception e){
-            log.error("Fail to update category");
-            throw new RuntimeException("Error: {}" + e.getMessage());
-        }
+            return ResponseEntity.ok(response);
     }
 
     /**
@@ -106,12 +90,9 @@ public class CategoryController {
      */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
-        try {
+            log.info("Deleting category");
+            String response = categoryService.deleteCategory(id);
             log.info("Success deleting category");
-            return ResponseEntity.ok(categoryService.deleteCategory(id));
-        } catch (Exception e) {
-            log.error("Fail to delete category");
-            throw new RuntimeException("Error: {}" + e.getMessage());
-        }
+            return ResponseEntity.ok(response);
     }
 }
