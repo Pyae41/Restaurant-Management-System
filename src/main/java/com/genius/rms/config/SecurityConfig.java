@@ -25,23 +25,35 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserService userService;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity https) throws Exception{
-
 
         https.csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers
                         .frameOptions(frameOptions -> frameOptions.sameOrigin()))// disable frame option for h2 console
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/auth/login").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers("/api/v1/admin").hasAuthority(Role.ADMIN.name())
-                        .requestMatchers("/api/v1/user").hasAuthority(Role.USER.name())
-                        .anyRequest().authenticated())
+                                // Allow Fetching to other users
+                                .requestMatchers("/api/v1/category").hasAnyAuthority(Role.ADMIN.name(),Role.USER.name())
+                                .requestMatchers("/api/v1/menu").hasAnyAuthority(Role.ADMIN.name(),Role.USER.name())
+
+                                // Allow Only Admin
+                                .requestMatchers("/api/v1/auth/register").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers("/api/v1/category/**").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers("/api/v1/menu/**").hasAuthority(Role.ADMIN.name())
+                        .anyRequest().authenticated()
+                        )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exception ->
+                        exception.accessDeniedHandler(customAccessDeniedHandler)
+                                .authenticationEntryPoint(customAuthenticationEntryPoint)
+                );
 
         return https.build();
     }
